@@ -9,5 +9,10 @@ public class JMain {
         Conversions conversions = new Conversions();
         OracleResultSet resultSet = new OracleResultSet();
         Iterator iterator = resultSet.set.iterator();
+        while(iterator.hasNext()) {
+            Object obj = iterator.next();
+            obj.getClass
+            put(conversions.covert(obj)); //put method belogs to different database (mySQL datatype)
+        }
     }
 }
