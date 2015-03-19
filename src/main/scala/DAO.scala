@@ -20,5 +20,5 @@ object DAO {
     def * = (name, email, id.?) <> (User.tupled, User.unapply)
   }
 
-  val users = TableQuery[Users]
+  lazy val users = TableQuery[Users]
 }
