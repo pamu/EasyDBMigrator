@@ -8,19 +8,16 @@ import scala.slick.driver.MySQLDriver.simple._
  * Created by android on 19/3/15.
  */
 object Main {
-  def main(args: Array[String]): Unit = {
+  def main(args: scala.Array[String]): Unit = {
 
     import DAO._
     db.withSession(implicit sx => {
 
       if(MTable.getTables("users").list.isEmpty) {
         users.ddl.create
-        val q = for(user <- users) yield user
-        if(q.countDistinct.run < 100) {
-          for(no <- 1 to 100) {
-            users += User(s"Jack Sparrow$no", s"jack$no@gmail.com",
-              s"$no Am Caption Jack Sparrow, Savvy", new Timestamp(new Date().getTime))
-          }
+        for(no <- 1 to 100) {
+          users += User(s"Jack Sparrow$no", s"jack$no@gmail.com",
+            s"$no Am Caption Jack Sparrow, Savvy", new Timestamp(new Date().getTime))
         }
       }
 
@@ -32,21 +29,37 @@ object Main {
 
     var connection: Connection = null
     var stmt: Statement = null
+    var preparedStmt: PreparedStatement = null
 
     try {
       connection = DriverManager.getConnection(Constants.dbURL, Constants.user, Constants.pass)
+
+      println("connection successful")
+
       stmt = connection.createStatement()
+
+
       val query = "select * from users"
+
+      val insertQuery = "insert into dusers values(?, ?, ?, ?, ?)"
+
       val rs: ResultSet = stmt.executeQuery(query)
+
+      preparedStmt = connection.prepareStatement(insertQuery);
+
       while(rs.next()) {
-        for(columnNo <- 0 until rs.getMetaData.getColumnCount) {
-          println(rs.getObject(columnNo).getClass)
+        println("transfering")
+        for(columnNo <- 1 to rs.getMetaData.getColumnCount) {
+
+          val columnValue = rs.getObject(columnNo)
+
+
         }
       }
     }
     catch {
       case ex: Exception =>
-        println(ex.getMessage)
+        println(ex.printStackTrace)
     }
 
   }
